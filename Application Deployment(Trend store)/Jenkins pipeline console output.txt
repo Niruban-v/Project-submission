@@ -1,0 +1,139 @@
+Started by user admin
+[Pipeline] Start of Pipeline
+[Pipeline] node
+Running on Jenkins in /var/lib/jenkins/workspace/trend-pipeline
+[Pipeline] {
+[Pipeline] withEnv
+[Pipeline] {
+[Pipeline] stage
+[Pipeline] { (Clone Code)
+[Pipeline] git
+The recommended git tool is: NONE
+No credentials specified
+ > git rev-parse --resolve-git-dir /var/lib/jenkins/workspace/trend-pipeline/.git # timeout=10
+Fetching changes from the remote Git repository
+ > git config remote.origin.url https://github.com/Niruban-v/trend-devops.git # timeout=10
+Fetching upstream changes from https://github.com/Niruban-v/trend-devops.git
+ > git --version # timeout=10
+ > git --version # 'git version 2.50.1'
+ > git fetch --tags --force --progress -- https://github.com/Niruban-v/trend-devops.git +refs/heads/*:refs/remotes/origin/* # timeout=10
+ > git rev-parse refs/remotes/origin/main^{commit} # timeout=10
+Checking out Revision 18a6977e95fbf3c46940859a78e3c2ed44a91f81 (refs/remotes/origin/main)
+ > git config core.sparsecheckout # timeout=10
+ > git checkout -f 18a6977e95fbf3c46940859a78e3c2ed44a91f81 # timeout=10
+ > git branch -a -v --no-abbrev # timeout=10
+ > git branch -D main # timeout=10
+ > git checkout -b main 18a6977e95fbf3c46940859a78e3c2ed44a91f81 # timeout=10
+Commit message: "Added Kubernetes deployment files"
+ > git rev-list --no-walk 18a6977e95fbf3c46940859a78e3c2ed44a91f81 # timeout=10
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Build Docker Image)
+[Pipeline] sh
++ docker build -t niruban7/trend-app:latest .
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 185B done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/nginx:alpine
+#2 ...
+
+#3 [auth] library/nginx:pull token for registry-1.docker.io
+#3 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/nginx:alpine
+#2 DONE 1.4s
+
+#4 [internal] load .dockerignore
+#4 transferring context: 110B done
+#4 DONE 0.0s
+
+#5 [1/2] FROM docker.io/library/nginx:alpine@sha256:5616878291a2eed594aee8db4dade5878cf7edcb475e59193904b198d9b830de
+#5 DONE 0.0s
+
+#6 [internal] load build context
+#6 transferring context: 7.85kB done
+#6 DONE 0.0s
+
+#7 [2/2] COPY dist/ /usr/share/nginx/html
+#7 CACHED
+
+#8 exporting to image
+#8 exporting layers done
+#8 writing image sha256:121ec091288b2c733b86576d896d86320f273f776c9d7c5a9f965e72cb688828 done
+#8 naming to docker.io/niruban7/trend-app:latest done
+#8 DONE 0.0s
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Login to DockerHub)
+[Pipeline] withCredentials
+Masking supported pattern matches of $PASS
+[Pipeline] {
+[Pipeline] sh
++ echo ****
++ docker login -u niruban7 --password-stdin
+WARNING! Your password will be stored unencrypted in /var/lib/jenkins/.docker/config.json.
+Configure a credential helper to remove this warning. See
+https://docs.docker.com/engine/reference/commandline/login/#credentials-store
+
+Login Succeeded
+[Pipeline] }
+[Pipeline] // withCredentials
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Push Docker Image)
+[Pipeline] sh
++ docker push niruban7/trend-app:latest
+The push refers to repository [docker.io/niruban7/trend-app]
+180f7b46425d: Preparing
+36c003a300d1: Preparing
+2b12ccfb247a: Preparing
+646d544dc619: Preparing
+f7b74afe8798: Preparing
+00a43f630638: Preparing
+f4eddaa4c303: Preparing
+e6082cdc2516: Preparing
+29df493baa13: Preparing
+00a43f630638: Waiting
+f4eddaa4c303: Waiting
+e6082cdc2516: Waiting
+29df493baa13: Waiting
+646d544dc619: Layer already exists
+2b12ccfb247a: Layer already exists
+f7b74afe8798: Layer already exists
+180f7b46425d: Layer already exists
+36c003a300d1: Layer already exists
+00a43f630638: Layer already exists
+e6082cdc2516: Layer already exists
+f4eddaa4c303: Layer already exists
+29df493baa13: Layer already exists
+latest: digest: sha256:c60358bbdda2eb13fd2b78dc369d3c14a35008813adeb27d7fe2b0ad3911f45f size: 2200
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Deploy to Kubernetes)
+[Pipeline] withCredentials
+Masking supported pattern matches of $KUBECONFIG
+[Pipeline] {
+[Pipeline] sh
++ kubectl apply -f deployment.yaml
+deployment.apps/trend-app configured
++ kubectl apply -f service.yaml
+service/trend-service unchanged
++ kubectl rollout restart deployment trend-app
+deployment.apps/trend-app restarted
+[Pipeline] }
+[Pipeline] // withCredentials
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] }
+[Pipeline] // withEnv
+[Pipeline] }
+[Pipeline] // node
+[Pipeline] End of Pipeline
+Finished: SUCCESS
