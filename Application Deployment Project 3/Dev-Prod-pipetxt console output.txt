@@ -1,0 +1,219 @@
+Started by user Niruban
+[Pipeline] Start of Pipeline
+[Pipeline] node
+Running on Jenkins in /var/lib/jenkins/workspace/react-prod-pipeline
+[Pipeline] {
+[Pipeline] withEnv
+[Pipeline] {
+[Pipeline] stage
+[Pipeline] { (Clone)
+[Pipeline] git
+The recommended git tool is: NONE
+No credentials specified
+Cloning the remote Git repository
+Cloning repository https://github.com/Niruban-v/devops-react-deployment.git
+ > git init /var/lib/jenkins/workspace/react-prod-pipeline # timeout=10
+Fetching upstream changes from https://github.com/Niruban-v/devops-react-deployment.git
+ > git --version # timeout=10
+ > git --version # 'git version 2.53.0'
+ > git fetch --tags --force --progress -- https://github.com/Niruban-v/devops-react-deployment.git +refs/heads/*:refs/remotes/origin/* # timeout=10
+ > git config remote.origin.url https://github.com/Niruban-v/devops-react-deployment.git # timeout=10
+ > git config --add remote.origin.fetch +refs/heads/*:refs/remotes/origin/* # timeout=10
+Avoid second fetch
+ > git rev-parse refs/remotes/origin/main^{commit} # timeout=10
+Checking out Revision 6719a4c55c622ccf521b021ea83ff08b4a2bb587 (refs/remotes/origin/main)
+ > git config core.sparsecheckout # timeout=10
+ > git checkout -f 6719a4c55c622ccf521b021ea83ff08b4a2bb587 # timeout=10
+ > git branch -a -v --no-abbrev # timeout=10
+ > git checkout -b main 6719a4c55c622ccf521b021ea83ff08b4a2bb587 # timeout=10
+Commit message: "Initial deployment setup"
+First time build. Skipping changelog.
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Build Docker Image)
+[Pipeline] sh
++ docker build -t niruban7/prod:v1 .
+DEPRECATED: The legacy builder is deprecated and will be removed in a future release.
+            Install the buildx component to build images with BuildKit:
+            https://docs.docker.com/go/buildx/
+
+Sending build context to Docker daemon  3.611MB
+Step 1/4 : FROM nginx:alpine
+ ---> 8b1e78743a03
+Step 2/4 : COPY build/ /usr/share/nginx/html/
+ ---> Using cache
+ ---> 13e6cd446214
+Step 3/4 : EXPOSE 80
+ ---> Using cache
+ ---> 9331a5a4bae8
+Step 4/4 : CMD ["nginx", "-g", "daemon off;"]
+ ---> Using cache
+ ---> aa333073a44f
+Successfully built aa333073a44f
+Successfully tagged niruban7/prod:v1
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Push Docker Image)
+[Pipeline] withCredentials
+Masking supported pattern matches of $PASS
+[Pipeline] {
+[Pipeline] sh
++ echo ****
++ docker login -u niruban7 --password-stdin
+Login Succeeded
+[Pipeline] sh
++ docker push niruban7/prod:v1
+The push refers to repository [docker.io/niruban7/prod]
+e654dbbbb9e1: Waiting
+a5008f4a4b25: Waiting
+fbaed3f7fcbe: Waiting
+894f001fc251: Waiting
+6a0ac1617861: Waiting
+43f834d60d8a: Waiting
+de1b677d8c00: Waiting
+abaae85d1626: Waiting
+94d083cf706a: Waiting
+fbaed3f7fcbe: Waiting
+894f001fc251: Waiting
+6a0ac1617861: Waiting
+43f834d60d8a: Waiting
+de1b677d8c00: Waiting
+abaae85d1626: Waiting
+94d083cf706a: Waiting
+e654dbbbb9e1: Waiting
+a5008f4a4b25: Waiting
+abaae85d1626: Waiting
+94d083cf706a: Waiting
+e654dbbbb9e1: Waiting
+a5008f4a4b25: Waiting
+fbaed3f7fcbe: Waiting
+894f001fc251: Waiting
+6a0ac1617861: Waiting
+43f834d60d8a: Waiting
+de1b677d8c00: Waiting
+e654dbbbb9e1: Waiting
+a5008f4a4b25: Waiting
+fbaed3f7fcbe: Waiting
+894f001fc251: Waiting
+6a0ac1617861: Waiting
+43f834d60d8a: Waiting
+de1b677d8c00: Waiting
+abaae85d1626: Waiting
+94d083cf706a: Waiting
+abaae85d1626: Waiting
+94d083cf706a: Waiting
+e654dbbbb9e1: Waiting
+a5008f4a4b25: Waiting
+fbaed3f7fcbe: Waiting
+894f001fc251: Waiting
+6a0ac1617861: Waiting
+43f834d60d8a: Waiting
+de1b677d8c00: Waiting
+abaae85d1626: Waiting
+94d083cf706a: Waiting
+e654dbbbb9e1: Waiting
+a5008f4a4b25: Waiting
+fbaed3f7fcbe: Waiting
+894f001fc251: Waiting
+6a0ac1617861: Waiting
+43f834d60d8a: Waiting
+de1b677d8c00: Waiting
+894f001fc251: Waiting
+6a0ac1617861: Waiting
+43f834d60d8a: Waiting
+de1b677d8c00: Waiting
+abaae85d1626: Waiting
+94d083cf706a: Waiting
+e654dbbbb9e1: Waiting
+a5008f4a4b25: Waiting
+fbaed3f7fcbe: Waiting
+894f001fc251: Waiting
+6a0ac1617861: Waiting
+43f834d60d8a: Waiting
+de1b677d8c00: Waiting
+abaae85d1626: Waiting
+94d083cf706a: Waiting
+e654dbbbb9e1: Waiting
+a5008f4a4b25: Waiting
+fbaed3f7fcbe: Waiting
+43f834d60d8a: Waiting
+de1b677d8c00: Waiting
+abaae85d1626: Waiting
+94d083cf706a: Waiting
+e654dbbbb9e1: Waiting
+a5008f4a4b25: Waiting
+fbaed3f7fcbe: Waiting
+894f001fc251: Waiting
+6a0ac1617861: Waiting
+43f834d60d8a: Waiting
+de1b677d8c00: Waiting
+abaae85d1626: Waiting
+94d083cf706a: Waiting
+e654dbbbb9e1: Waiting
+a5008f4a4b25: Waiting
+fbaed3f7fcbe: Waiting
+894f001fc251: Waiting
+6a0ac1617861: Waiting
+abaae85d1626: Waiting
+94d083cf706a: Layer already exists
+e654dbbbb9e1: Waiting
+a5008f4a4b25: Waiting
+fbaed3f7fcbe: Waiting
+894f001fc251: Waiting
+6a0ac1617861: Waiting
+43f834d60d8a: Waiting
+de1b677d8c00: Layer already exists
+a5008f4a4b25: Waiting
+fbaed3f7fcbe: Waiting
+894f001fc251: Waiting
+6a0ac1617861: Waiting
+43f834d60d8a: Waiting
+abaae85d1626: Waiting
+e654dbbbb9e1: Waiting
+abaae85d1626: Waiting
+e654dbbbb9e1: Waiting
+a5008f4a4b25: Waiting
+fbaed3f7fcbe: Waiting
+894f001fc251: Waiting
+6a0ac1617861: Waiting
+43f834d60d8a: Waiting
+a5008f4a4b25: Waiting
+fbaed3f7fcbe: Layer already exists
+894f001fc251: Waiting
+6a0ac1617861: Waiting
+43f834d60d8a: Waiting
+abaae85d1626: Waiting
+e654dbbbb9e1: Waiting
+894f001fc251: Waiting
+6a0ac1617861: Layer already exists
+43f834d60d8a: Layer already exists
+abaae85d1626: Layer already exists
+e654dbbbb9e1: Layer already exists
+a5008f4a4b25: Layer already exists
+894f001fc251: Waiting
+894f001fc251: Waiting
+894f001fc251: Mounted from niruban7/dev
+v1: digest: sha256:aa333073a44fbcd1f83306e9d6ccc59aa7cf389c76af69097894b4ea42d86d1e size: 2264
+[Pipeline] }
+[Pipeline] // withCredentials
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Deploy)
+[Pipeline] sh
++ docker stop react-container
+react-container
++ docker rm react-container
+react-container
++ docker run -d -p 80:80 --name react-container niruban7/prod:v1
+e36225ac4c52560307b47144b910eea769ad5b0010b8dd6175ec070013f08489
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] }
+[Pipeline] // withEnv
+[Pipeline] }
+[Pipeline] // node
+[Pipeline] End of Pipeline
+Finished: SUCCESS
